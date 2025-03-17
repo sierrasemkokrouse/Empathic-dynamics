@@ -1,5 +1,5 @@
 ---
-title: "Empathic-dynamics_04-Analyses"
+title: "Empathic-dynamics: Full Analyses"
 author: "SSK"
 format: 
   html:
@@ -11,7 +11,8 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Set-up 
+# Set-up
+
 ```{r}
 #| warning: false
 #| message: false
@@ -215,13 +216,11 @@ ggplot(data, aes(ladder)) +
   labs(x = "Subjective SES (Ladder)",
        y = "Respondents")
 ```
-
 :::
 
 # Confirmatory
 
 ::: panel-tabset
-
 #### 1. Relationship-prioritization 🟢
 
 *How likely are you to prioritize establishing a positive relationship with every single co-worker in your workplace?*
@@ -419,7 +418,6 @@ kable(data %>%
 **You just started a new role as a manager. You regularly try to meet with your new employees both as a team and one-on-one to get to know them and to give them the opportunity to get to know you. In general, you have built a good rapport with many of them and they seem to like your leadership style. However, after a few weeks, you notice that one of your employees has seemed to do the bare minimum with some work duties and doesn’t seem mentally present in meetings. From what you have heard, this employee tended to go above and beyond in their work before you started your new role.**
 
 ::: panel-tabset
-
 #### Attributions 🔴
 
 ```{r}
@@ -550,7 +548,6 @@ kable(data %>%
   group_by(Condition) %>% 
   summarise(mean(complaint_1), sd(complaint_1)))
 ```
-
 :::
 
 ## Scenario 2
@@ -558,7 +555,6 @@ kable(data %>%
 **You just started reporting to a new manager. After a few weeks, you notice that the new manager has built rapport with some of your colleagues but hasn’t made much effort to get to know you. The new manager has several impromptu meetings per week and seems to forget to loop you in. Although you have been asked to pick up extra work, the manager doesn’t seem to acknowledge your effort or thank you for doing additional tasks.**
 
 ::: panel-tabset
-
 #### Attributions 🔴
 
 ```{r}
@@ -714,13 +710,11 @@ kable(data %>%
   group_by(Condition) %>% 
   summarise(mean(trustLeader_SOW_2), sd(trustLeader_SOW_2)))
 ```
-
 :::
 
 ## $\Delta$ Scenario 1 - Scenario 2
 
 ::: panel-tabset
-
 #### Attributions 🔴
 
 ```{r}
@@ -740,7 +734,6 @@ tab_model(lm(IRI_PT1Diff ~ Condition + wave + manager, data))
 
 tab_model(lm(IRI_PT2Diff ~ Condition + wave + manager, data))
 ```
-
 :::
 :::
 
@@ -749,7 +742,6 @@ tab_model(lm(IRI_PT2Diff ~ Condition + wave + manager, data))
 ## Demographics
 
 ::: panel-tabset
-
 ```{r}
 #| warning: false
 #| message: false
@@ -807,7 +799,6 @@ kable(session2 %>%
 #| code-fold: true
 kable(table(session2$manager), col.names = c("Manager","Freq"))
 ```
-
 :::
 
 ## Perspective-Taking
@@ -823,7 +814,6 @@ kable(alpha(perspectiveTaking_S2, na.rm=T, check.keys=T)$alpha)
 ```
 
 ::: panel-tabset
-
 #### a. 🟢
 
 **Over the last week while at work...**
@@ -906,7 +896,6 @@ tab_model(lm(IRI_PT_3_S2 ~ Condition + wave, data))
 #| code-fold: true
 tab_model(lm(IRI_PT_4_S2 ~ Condition + wave, data))
 ```
-
 :::
 
 ::: {.callout-note collapse="true"}
@@ -970,7 +959,6 @@ tab_model(lm(burnout_S2 ~ Condition * gender + wave, data))
 ## Relationships
 
 ::: panel-tabset
-
 #### a. 🔴
 
 *It is important to maintain a positive relationship with co-workers who are hard to work with.*
@@ -1045,13 +1033,11 @@ kable(data %>%
 
 tab_model(lm(workerRelations3_S2 ~ Condition * manager + wave, data))
 ```
-
 :::
 
 # Scenario
 
 ::: panel-tabset
-
 #### Attributions 🔴
 
 ```{r}
@@ -1372,7 +1358,6 @@ kable(data %>%
 #### Manager
 
 ::: panel-tabset
-
 #### Environment 🔴
 
 ```{r}
@@ -1476,7 +1461,6 @@ summary(lm(managerMindset4_S2 ~ Condition, data))
 summary(lm(managerMindset5_S2 ~ Condition, data))
 summary(lm(managerMindset6_S2 ~ Condition, data))
 ```
-
 :::
 :::
 
@@ -1792,5 +1776,4 @@ kable(data %>%
   group_by(Condition) %>% 
   summarise(mean(PFI2_S2), sd(PFI2_S2)))
 ```
-
 :::

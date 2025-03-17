@@ -1,6 +1,5 @@
 ---
-title: "Executive Summary"
-subtitle: "Workplace Intervention (Empathic-dynamics)"
+title: "Empathic-dynamics: Executive Summary"
 author: "SSK"
 date: "today"
 format: 
@@ -362,65 +361,86 @@ kable(table(session2$manager), col.names = c("Manager","Freq"))
 ::: {.callout-note collapse="true"}
 # Full List of Outcome Measures
 
-After the scenarios conditions, we will explore the following DVs: 
+After the scenarios conditions, we will explore the following DVs:
 
-- Attributions made for the coworkers behavior (1-item: 1 - Behavior is primarily due to who they are as a person to 5 - Behavior is primarily due to circumstances that are beyond their control). 
-- Difficulty to work with coworker (1-item: “How likely is it that you would find it hard to work with this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
-- Valued feelings (1-item: “How likely is it that you would feel valued by this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
-- Willingness to give 360 feedback (1-item: “I would be willing to give extensive feedback to this employee / manager in a 360 assessment process.” 1 – Strongly disagree to 5 – Strongly agree). 
-- Likelihood of formal complaint (1-item: “How likely is it that you would submit a formal complaint about this employee / manager at some point?” 1 – Not at all likely to 5 – Extremely likely). 
-- Response to situation (1-item: “In your own words, how would you respond or not respond in this situation? Please be as detailed as possible.” Open-ended). 
-- Willingness to put in effort ( 1-item: “I would be willing to put in extra effort if this manager asked me to.” 1 – Extremely disagree to 7 – Extremely agree). 
-- Trust of coworker (1-item: “How likely is it that you would trust this manager?” 1 – Not at all likely to 5 – Extremely likely). - Trust of organization leader (1-item: “How likely is it that you would trust the leader of your school, college, division or equivalent?” 1 – Not at all likely to 5 – Extremely likely).
+-   Attributions made for the coworkers behavior (1-item: 1 - Behavior is primarily due to who they are as a person to 5 - Behavior is primarily due to circumstances that are beyond their control).
+-   Difficulty to work with coworker (1-item: “How likely is it that you would find it hard to work with this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely).
+-   Valued feelings (1-item: “How likely is it that you would feel valued by this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely).
+-   Willingness to give 360 feedback (1-item: “I would be willing to give extensive feedback to this employee / manager in a 360 assessment process.” 1 – Strongly disagree to 5 – Strongly agree).
+-   Likelihood of formal complaint (1-item: “How likely is it that you would submit a formal complaint about this employee / manager at some point?” 1 – Not at all likely to 5 – Extremely likely).
+-   Response to situation (1-item: “In your own words, how would you respond or not respond in this situation? Please be as detailed as possible.” Open-ended).
+-   Willingness to put in effort ( 1-item: “I would be willing to put in extra effort if this manager asked me to.” 1 – Extremely disagree to 7 – Extremely agree).
+-   Trust of coworker (1-item: “How likely is it that you would trust this manager?” 1 – Not at all likely to 5 – Extremely likely). - Trust of organization leader (1-item: “How likely is it that you would trust the leader of your school, college, division or equivalent?” 1 – Not at all likely to 5 – Extremely likely).
 
-Demographic variables: 
+Demographic variables:
 
-- Years of experience in current position 
-- Years of experience working in the organization 
-- Years of experience as a manager experience 
-- Participant SES (Subjective using MacArthur ladder; education; household income; childhood zipcode) 
-- Participant age
+-   Years of experience in current position
+-   Years of experience working in the organization
+-   Years of experience as a manager experience
+-   Participant SES (Subjective using MacArthur ladder; education; household income; childhood zipcode)
+-   Participant age
 
-We will explore the impact of the intervention on the following Session 2 outcomes: 
+We will explore the impact of the intervention on the following Session 2 outcomes:
 
-- Trust of organization leader (1-item: “I trust the leader of my school, college, division or equivalent.” 1 – Not at all to 5 – Extremely). 
-- Trust of manager (1-item: “I trust my manager.” 1 – Not at all to 5 – Extremely). 
-- Importance of worker relationships (3-items. 1 – Strongly disagree to 5 – Strongly agree): 1. “It is important to maintain a positive relationship with co-workers who are hard to work with.” 2. “There are certain co-workers that I come into conflict with and nothing can be done to change that.” 3.“A culture of harmonious working relationships is a top priority for me.” 
-- Professional fulfillment (from the Professional Fulfillment Index; Trockel et al., 2018) 
-- Belonging (5-items: 1 – Not at all to 7 – Extremely) 
-  - 1. “How comfortable do you feel at UC Berkeley?” 
-  - 2. “How much do you feel that you could “be yourself” at UC Berkeley?” 
-  - 3. “How accepted do you feel at UC Berkeley?” 
-  - 4. “How alienated do you feel at UC Berkeley?” 
-  - 5. “How much do you feel like you “fit in” at UC Berkeley?” 
-- Sense of social fit (3-items: 1 – Strongly disagree to 7 – Strongly agree) 
-  - 1. “Working at UC Berkeley feels natural.” 
-  - 2. “Working at UC Berkeley is a good fit for me.” 
-  - 3. “Working at UC Berkeley feels right.”
+-   Trust of organization leader (1-item: “I trust the leader of my school, college, division or equivalent.” 1 – Not at all to 5 – Extremely).
+-   Trust of manager (1-item: “I trust my manager.” 1 – Not at all to 5 – Extremely).
+-   Importance of worker relationships (3-items. 1 – Strongly disagree to 5 – Strongly agree): 1. “It is important to maintain a positive relationship with co-workers who are hard to work with.” 2. “There are certain co-workers that I come into conflict with and nothing can be done to change that.” 3.“A culture of harmonious working relationships is a top priority for me.”
+-   Professional fulfillment (from the Professional Fulfillment Index; Trockel et al., 2018)
+-   Belonging (5-items: 1 – Not at all to 7 – Extremely)
+    -   
 
-In response to a mock job application in Session 2: 
+        1.  “How comfortable do you feel at UC Berkeley?”
 
-- Perceived application intelligence (1-item: “This applicant is intelligent.” 1 – Strongly disagree to 5 – Strongly agree) 
-- Perceived application motivation (1-item: “This applicant is motivated.” 1 – Strongly disagree to 5 – Strongly agree) 
-- Interest in working with applicant (1-item: “How likely are you to ...want to work with this applicant?” 1 – Extremely unlikely to 5 – Extremely likely). 
-- Desire to offer interview to application (1-item: “How likely are you to ...want to offer an interview to this applicant?” 1 – Extremely unlikely to 5 – Extremely likely). 
-- Desire to hire applicant (1-item: “How likely are you to ...hire this applicant? 1 – Extremely unlikely to 5 – Extremely likely). 
-- Likelihood of applicant promotion (1-item: “How likely are you to ...be promoted within the first year? 1 – Extremely unlikely to 5 – Extremely likely). 
-- Interview questions (1-item: “What would you ask this applicant in an interview? Please list at least 3 questions that you would like to ask this applicant. Include a brief description of why you included each questions.” Open-ended).
+    -   
 
-In response to a vignette in Session 2: 
+        2.  “How much do you feel that you could “be yourself” at UC Berkeley?”
 
-- How they would feel (1-item; Open-ended). 
-- Causes for coworker behavior (1-item: “What might be causing this employee / manager’s behavior? Please list everything that you can think of.” Open-ended). 
-- Perspective-taking (1-items: “Before criticizing this employee / manager, I would try to imagine how I would feel if I were in their place.”; “I would try to “put myself in the shoes” of this employee / manager for a while.” 1 – Strongly disagree to 5 – Strongly agree) 
-- Difficulty to work with coworker (1-item: “How likely is it that you would find it hard to work with this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
-- Valued feelings (1-item: “How likely is it that you would feel valued by this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
-- Willingness to give 360 feedback (1-item: “I would be willing to give extensive feedback to this employee / manager in a 360 assessment process.” 1 – Strongly disagree to 5 – Strongly agree). 
-- Valance of 360 feedback (1-item: “If I were to give feedback to this employee / manager in a 360 assessment process, the feedback would be...” 1 – Entirely negative to 7 – Entirely positive). 
-- Likelihood of formal complaint (1-item: “How likely is it that you would submit a formal complaint about this employee / manager at some point?” 1 – Not at all likely to 5 – Extremely likely). 
-- Content of formal complaint (1-item: “If you were to submit a formal complaint, please enter what you would write in it.” Open-ended). 
-- Response to situation (1-item: “In your own words, how would you respond or not respond in this situation? Please be as detailed as possible.” Open-ended). 
-- Willingness to put in effort ( 1-item: “I would be willing to put in extra effort if this manager asked me to.” 1 – Extremely disagree to 7 – Extremely agree). 
-- Trust of coworker (1-item: “How likely is it that you would trust this manager?” 1 – Not at all likely to 5 – Extremely likely).
+    -   
 
+        3.  “How accepted do you feel at UC Berkeley?”
+
+    -   
+
+        4.  “How alienated do you feel at UC Berkeley?”
+
+    -   
+
+        5.  “How much do you feel like you “fit in” at UC Berkeley?”
+-   Sense of social fit (3-items: 1 – Strongly disagree to 7 – Strongly agree)
+    -   
+
+        1.  “Working at UC Berkeley feels natural.”
+
+    -   
+
+        2.  “Working at UC Berkeley is a good fit for me.”
+
+    -   
+
+        3.  “Working at UC Berkeley feels right.”
+
+In response to a mock job application in Session 2:
+
+-   Perceived application intelligence (1-item: “This applicant is intelligent.” 1 – Strongly disagree to 5 – Strongly agree)
+-   Perceived application motivation (1-item: “This applicant is motivated.” 1 – Strongly disagree to 5 – Strongly agree)
+-   Interest in working with applicant (1-item: “How likely are you to ...want to work with this applicant?” 1 – Extremely unlikely to 5 – Extremely likely).
+-   Desire to offer interview to application (1-item: “How likely are you to ...want to offer an interview to this applicant?” 1 – Extremely unlikely to 5 – Extremely likely).
+-   Desire to hire applicant (1-item: “How likely are you to ...hire this applicant? 1 – Extremely unlikely to 5 – Extremely likely).
+-   Likelihood of applicant promotion (1-item: “How likely are you to ...be promoted within the first year? 1 – Extremely unlikely to 5 – Extremely likely).
+-   Interview questions (1-item: “What would you ask this applicant in an interview? Please list at least 3 questions that you would like to ask this applicant. Include a brief description of why you included each questions.” Open-ended).
+
+In response to a vignette in Session 2:
+
+-   How they would feel (1-item; Open-ended).
+-   Causes for coworker behavior (1-item: “What might be causing this employee / manager’s behavior? Please list everything that you can think of.” Open-ended).
+-   Perspective-taking (1-items: “Before criticizing this employee / manager, I would try to imagine how I would feel if I were in their place.”; “I would try to “put myself in the shoes” of this employee / manager for a while.” 1 – Strongly disagree to 5 – Strongly agree)
+-   Difficulty to work with coworker (1-item: “How likely is it that you would find it hard to work with this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely).
+-   Valued feelings (1-item: “How likely is it that you would feel valued by this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely).
+-   Willingness to give 360 feedback (1-item: “I would be willing to give extensive feedback to this employee / manager in a 360 assessment process.” 1 – Strongly disagree to 5 – Strongly agree).
+-   Valance of 360 feedback (1-item: “If I were to give feedback to this employee / manager in a 360 assessment process, the feedback would be...” 1 – Entirely negative to 7 – Entirely positive).
+-   Likelihood of formal complaint (1-item: “How likely is it that you would submit a formal complaint about this employee / manager at some point?” 1 – Not at all likely to 5 – Extremely likely).
+-   Content of formal complaint (1-item: “If you were to submit a formal complaint, please enter what you would write in it.” Open-ended).
+-   Response to situation (1-item: “In your own words, how would you respond or not respond in this situation? Please be as detailed as possible.” Open-ended).
+-   Willingness to put in effort ( 1-item: “I would be willing to put in extra effort if this manager asked me to.” 1 – Extremely disagree to 7 – Extremely agree).
+-   Trust of coworker (1-item: “How likely is it that you would trust this manager?” 1 – Not at all likely to 5 – Extremely likely).
 :::

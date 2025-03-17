@@ -1,6 +1,6 @@
 ---
-title: "00-FocusGroups"
-subtitle: "Empathic-dynamics Intervention"
+title: "Empathic-dynamics: Focus Groups"
+subtitle: "Participant Demographics"
 format:
   html:
     self-contained: true

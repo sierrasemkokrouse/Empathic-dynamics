@@ -10,15 +10,11 @@
   quarto-pub:
     - id: 1f5cdba1-8347-43fc-8c4f-c47bc40aab03
       url: 'https://sierrasemkokrouse.quarto.pub/workplace-intervention_03-findings'
-- source: Executive-Summary.qmd
-  quarto-pub:
-    - id: c2147587-5a14-46c6-b282-fcb680ea2200
-      url: 'https://sierrasemkokrouse.quarto.pub/executive-summary'
-    - id: 3a7286d0-bb0a-464c-bd28-f5284bf7367c
-      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics_executive-summary'
 - source: 04_Manuscript.qmd
   quarto-pub:
-    - id: 171caa94-20a0-4840-8782-eca029522661
-      url: 'https://sierrasemkokrouse.quarto.pub/workplace-intervention_01-analyses-cd89'
-    - id: 3cfbbc90-cfaf-4bae-973c-cc9d90df3c58
-      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics_intervention_04-analyses'
+    - id: 989cf451-343d-48e2-91d9-cd554365b250
+      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics-full-analyses'
+- source: Executive-Summary.qmd
+  quarto-pub:
+    - id: e9a9d9ca-bcf7-4d14-89b7-0a08463f43de
+      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics-executive-summary'
