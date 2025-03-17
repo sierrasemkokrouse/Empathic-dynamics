@@ -1,0 +1,1796 @@
+---
+title: "Empathic-dynamics_04-Analyses"
+author: "SSK"
+format: 
+  html:
+    toc: TRUE
+    embed-resources: TRUE
+    self-contained-math: TRUE
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+# Set-up 
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+library(tidyverse)
+library(psych)
+library(knitr)
+library(report)
+library(ggpubr)
+library(sjPlot)
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+theme_perez <- function() {
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text = element_text(colour = "black",  family = "Times New Roman", size = 12),
+    axis.title = element_text(colour = "black", family = "Times New Roman", size = 13),
+    legend.title = element_text(colour = "black", family = "Times New Roman", size = 13),
+    legend.text = element_text(colour = "black", family = "Times New Roman", size = 12),
+    plot.title = element_text(colour = "black", family = "Times New Roman", size = 13),
+    plot.subtitle = element_text(colour = "black", family = "Times New Roman", size = 13),
+    strip.text = element_text(colour = "black", family = "Times New Roman", size = 13))
+}
+
+horzi_theme <- theme(    #   remove the gray background
+  panel.background    = element_rect( size=.1, colour="black", fill="white") ,
+  #   make the major gridlines light gray and thin
+  panel.grid.major.y  = element_line( size=.1, colour="#666666" ) ,
+  #   suppress the vertical grid lines
+  panel.grid.major.x  = element_blank() ,
+  #   suppress the minor grid lines
+  panel.grid.minor    = element_blank() ,
+  #   add axes
+  axis.line           = element_line( size=.2 , colour="#666666" ),
+  #   adjust the axis ticks
+  axis.ticks          = element_line( size=.1 , colour="#666666" ),
+  #   move the y-axis over to the left
+  #axis.title.y        = element_text( angle=90, vjust=.5, hjust=.5 ),
+  #   increase margin moved-over y-axis label fits
+  # plot.margin = unit( c(.5,.25,.25,.5) , "in") ,
+  title = element_text(  size=12 ) ,
+  axis.title.x = element_text( size=12 ) ,
+  axis.title.y = element_text( size=12 ) ,
+  axis.text.x = element_text( size=12 ) ,
+  axis.text.y = element_text( size=12 )
+)
+
+horzi <- horzi_theme
+
+stat_sum_df <- function(fun, geom="crossbar", ...) {
+  stat_summary(fun.data=fun, colour="black", geom=geom, width=.5,  ...)
+}
+
+# define the dodge object for equivalent error bar and geom_bar
+dodge <- position_dodge(width=0.9)
+
+# define a geom_bar
+bars <- geom_bar(stat="summary", fun.y="mean", position="dodge")
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- read.csv("clean_fulldata_20240910.csv")
+```
+
+# High-Level Findings
+
+**Confirmatory**
+
+-   Treatment had a significant effect on **multiple-selves / complexity beliefs**
+-   Treatment had a significant effect on **relationship-prioritization** and **perspective-taking**
+
+**Exploratory**
+
+-   Treatment had a marginal effect on **perspective-taking** for manager scenario
+
+**Session 2**
+
+-   Treatment had a marginal / significant effect on **perspective-taking**
+-   Treatment had a significant effect on **beliefs about workplace relationships**
+-   Treatment even had significant effect on **perspective-taking in manager scenario**
+
+# Key
+
+| Symbol |     Sig. Level      | p           |
+|:------:|:-------------------:|:------------|
+|   🟢   |     Significant     | \< 0.05     |
+|   ️️🟡   | Marginal / Trending | 0.05 - 0.09 |
+|   🔴   |   Non-Significant   | \> 0.10     |
+
+# Session 1
+
+# Descriptives
+
+::: panel-tabset
+#### Condition
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(data %>% 
+  filter(!is.na(Condition)) %>% 
+  group_by(Condition) %>% 
+  summarise("n" = n(),
+            "%" = ((n() / nrow(data)) * 100)))
+```
+
+#### School / Division
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(table(data$schoolDivision), col.names = c("School / Division","Freq"))
+```
+
+#### Academic / Staff
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(data %>% 
+  group_by(academic) %>% 
+  summarise("n" = n(),
+            "%" = ((n() / nrow(data)) * 100)))
+```
+
+#### Manager
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(data %>% 
+  filter(yearsWork != 2013.00) %>% 
+  summarise(mean = mean(yearsWork),
+            sd = sd(yearsWork),
+            min = min(yearsWork),
+            max = max(yearsWork)))
+
+kable(table(data$manager), col.names = c("Manager","Freq"))
+
+ggplot(data, aes(x=managerHowMany)) +
+  geom_density() +
+  labs(x = "# of Employees Managing",
+       y = "Density") +
+  theme_bw()
+
+kable(psych::describe(data$managerHowMany), row.names = F)
+```
+
+#### Gender
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(data %>% 
+  group_by(gender) %>% 
+  summarise("n" = n(),
+            "%" = ((n() / nrow(data)) * 100)))
+```
+
+#### Race
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(data %>% 
+  group_by(race) %>% 
+  summarise("n" = n(),
+            "%" = ((n() / nrow(data)) * 100)))
+```
+
+#### SES
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(data %>% 
+  group_by(income) %>% 
+  summarise("n" = n(),
+            "%" = ((n() / nrow(data)) * 100)))
+
+kable(psych::describe(data$ladder), row.names = F)
+
+ggplot(data, aes(ladder)) +
+  geom_density(bins=20, fill="lightblue", alpha=0.8) +
+  theme_minimal() +
+  xlim(limits=c(1,10)) +
+  labs(x = "Subjective SES (Ladder)",
+       y = "Respondents")
+```
+
+:::
+
+# Confirmatory
+
+::: panel-tabset
+
+#### 1. Relationship-prioritization 🟢
+
+*How likely are you to prioritize establishing a positive relationship with every single co-worker in your workplace?*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(psych::describe(data$manipTreat1), row.names = F)
+
+tab_model(lm(manipTreat1 ~ Condition + wave, data))
+# report::report(lm(manipTreat1 ~ Condition + wave, data))
+
+plot1 <- data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=manipTreat1)) +
+  geom_bar(stat="summary", position="dodge") +
+  geom_jitter(color = "grey20") +
+  stat_sum_df("mean_cl_boot", geom = "errorbar", position= position_dodge(.9), conf.int=.68, width=0.2) +
+  expand_limits(y = c(1, 7)) +
+  scale_y_continuous(breaks=c(1:7)) +
+  theme_perez() +
+  scale_fill_grey() +
+  labs(y = "Prioritization of Positive Workplace Relationships")
+
+plot1
+```
+
+#### 2. Multiple-selves / Complexity Beliefs 🟢
+
+*How much do you agree with the following statement?: Everyone in the workplace is complex inside and is capable of tapping into different parts of themself.*
+
+```{r, echo=F}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(psych::describe(data$manipTreat2_recode), row.names = F)
+
+tab_model(lm(manipTreat2_recode ~ Condition + wave, data))
+# report::report(lm(manipTreat2_recode ~ Condition + wave, data))
+
+plot2 <- data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=manipTreat2_recode)) +
+  geom_bar(stat="summary", position="dodge") +
+  geom_jitter(color = "grey20") +
+  stat_sum_df("mean_cl_boot", geom = "errorbar", position= position_dodge(.9), conf.int=.68, width=0.2) +
+  expand_limits(y = c(1, 5)) +
+  scale_y_continuous(breaks=c(1:5)) +
+  theme_perez() +
+  scale_fill_grey() +
+  labs(y = "Multiple-selves / Complexity Beliefs")
+
+plot2
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+#| include: false
+ggarrange(plot1, plot2)
+```
+
+#### 3. Perspective-taking
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+perspectiveTaking <- data %>% 
+  dplyr::select(IRI_PT_1, IRI_PT_2, IRI_PT_3, IRI_PT_4)
+
+kable(alpha(perspectiveTaking, na.rm=T, check.keys=T)$alpha)
+```
+
+$\alpha = 0.62$
+
+**Per preregistration, will therefore look at items individually**
+
+*Over the next 2 weeks while at work...*
+
+::: panel-tabset
+#### a. 🟢
+
+*I will try to look at everybody’s side of a disagreement before I make a decision.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_4 ~ Condition + wave, data))
+# report::report(lm(IRI_PT_4 ~ Condition + wave, data))
+
+plot3 <- data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_4)) +
+  geom_bar(stat="summary", position="dodge") + 
+  geom_jitter(color = "grey20") +
+  stat_sum_df("mean_cl_boot", geom = "errorbar", position= position_dodge(.9), conf.int=.68, width=0.2) +
+  expand_limits(y = c(1, 5)) +
+  scale_y_continuous(breaks=c(1:5)) +
+  theme_perez() +
+  scale_fill_grey() +
+  labs(y = "I will look at every side of a disagreement")
+
+plot3
+```
+
+#### b. 🟡
+
+*I will believe that there are two sides to every question and try to look at them both.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_3 ~ Condition + wave, data))
+# report::report(lm(IRI_PT_3 ~ Condition + wave, data))
+
+plot4 <- data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_3)) +
+  geom_bar(stat="summary", position="dodge") +
+  geom_jitter(color = "grey20") +
+  stat_sum_df("mean_cl_boot", geom = "errorbar", position= position_dodge(.9), conf.int=.68, width=0.2) +
+  expand_limits(y = c(1, 5)) +
+  scale_y_continuous(breaks=c(1:5)) +
+  theme_perez() +
+  scale_fill_grey() +
+  labs(y = "I will believe that there are two sides")
+
+plot4
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+#| include: false
+ggarrange(plot3, plot4)
+```
+
+#### c. 🔴
+
+*I will sometimes try to understand my coworkers better by imagining howthings look from their perspective.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_2 ~ Condition + wave, data))
+```
+
+#### d. 🔴
+
+*if I’m sure I’m right about something, I won’t waste much time listening to other people’s arguments.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_1 ~ Condition + wave, data))
+```
+:::
+:::
+
+::: {.callout-note collapse="true"}
+# Exploratory
+
+## Burnout 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(burnout ~ Condition, data))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=burnout)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") + 
+  expand_limits(y = c(1, 8)) +
+  theme_bw() +
+  labs(y = "Burnout")
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(burnout)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(burnout), sd(burnout)))
+```
+
+## Scenario 1
+
+**You just started a new role as a manager. You regularly try to meet with your new employees both as a team and one-on-one to get to know them and to give them the opportunity to get to know you. In general, you have built a good rapport with many of them and they seem to like your leadership style. However, after a few weeks, you notice that one of your employees has seemed to do the bare minimum with some work duties and doesn’t seem mentally present in meetings. From what you have heard, this employee tended to go above and beyond in their work before you started your new role.**
+
+::: panel-tabset
+
+#### Attributions 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(attributions_1 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(attributions_1)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(attributions_1), sd(attributions_1)))
+```
+
+#### Perspective-Taking 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT1_1 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(IRI_PT1_1)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(IRI_PT1_1), sd(IRI_PT1_1)))
+
+tab_model(lm(IRI_PT2_1 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(IRI_PT2_1)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(IRI_PT2_1), sd(IRI_PT2_1)))
+```
+
+#### Hard to Work With 🔴
+
+**How likely is it that you would find it hard to work with this employee at some point in the next month?**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(hardToWorkWith_1 = case_match(hardToWorkWith_1, 
+                                         18 ~ 5,
+                                         19 ~ 4,
+                                         20 ~ 3,
+                                         21 ~ 2,
+                                         22 ~ 1))
+
+tab_model(lm(hardToWorkWith_1 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(hardToWorkWith_1)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(hardToWorkWith_1), sd(hardToWorkWith_1)))
+```
+
+#### Valued 🟢
+
+**How likely is it that you would feel valued by this employee at some point in the next month?**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(valued_1_recode ~ Condition, data))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=valued_1_recode)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") + 
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Likelihood of Feeling Valued")
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(valued_1_recode)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(valued_1_recode), sd(valued_1_recode)))
+```
+
+#### 360 🔴
+
+**I would be willing to give extensive feedback to this employee in a 360 assessment process.**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(X360_1 = case_match(X360_1, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(X360_1 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(X360_1)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(X360_1), sd(X360_1)))
+```
+
+#### Complaint 🔴
+
+**How likely is it that you would submit a formal complaint about this employee at some point?**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(complaint_1 = case_match(complaint_1, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(complaint_1 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(complaint_1)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(complaint_1), sd(complaint_1)))
+```
+
+:::
+
+## Scenario 2
+
+**You just started reporting to a new manager. After a few weeks, you notice that the new manager has built rapport with some of your colleagues but hasn’t made much effort to get to know you. The new manager has several impromptu meetings per week and seems to forget to loop you in. Although you have been asked to pick up extra work, the manager doesn’t seem to acknowledge your effort or thank you for doing additional tasks.**
+
+::: panel-tabset
+
+#### Attributions 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(attributions_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(attributions_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(attributions_2), sd(attributions_2)))
+```
+
+#### Perspective-Taking 🟡
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT1_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(IRI_PT1_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(IRI_PT1_2), sd(IRI_PT1_2)))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT1_2)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") + 
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+
+tab_model(lm(IRI_PT2_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(IRI_PT2_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(IRI_PT2_2), sd(IRI_PT2_2)))
+```
+
+#### 360 🔴
+
+**I would be willing to give extensive feedback to this employee in a 360 assessment process.**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(X360_2 = case_match(X360_2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(X360_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(X360_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(X360_2), sd(X360_2)))
+```
+
+#### Complaint 🔴
+
+**How likely is it that you would submit a formal complaint about this employee at some point?**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(complaint_2 = case_match(complaint_2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(complaint_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(complaint_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(complaint_2), sd(complaint_2)))
+```
+
+#### Engagement 🔴
+
+**I would be willing to put in extra effort if this manager asked me to.**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(engagement = case_match(engagement, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2, 
+                                         7 ~ 1))
+
+tab_model(lm(engagement ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(engagement)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(engagement), sd(engagement)))
+```
+
+#### Trust 🔴
+
+**How likely is it that you would trust this manager / the leader of your school, college, division or equivalent?**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(trust_SOW_2 = case_match(trust_SOW_2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(trust_SOW_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(trust_SOW_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(trust_SOW_2), sd(trust_SOW_2)))
+
+data <- data %>% 
+  mutate(trustLeader_SOW_2 = case_match(trustLeader_SOW_2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(trustLeader_SOW_2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(trustLeader_SOW_2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(trustLeader_SOW_2), sd(trustLeader_SOW_2)))
+```
+
+:::
+
+## $\Delta$ Scenario 1 - Scenario 2
+
+::: panel-tabset
+
+#### Attributions 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(attributionsDiff ~ Condition + wave + manager, data))
+```
+
+#### Perspective-Taking 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT1Diff ~ Condition + wave + manager, data))
+
+tab_model(lm(IRI_PT2Diff ~ Condition + wave + manager, data))
+```
+
+:::
+:::
+
+# Session 2
+
+## Demographics
+
+::: panel-tabset
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+session2 <- data %>% 
+  filter(!is.na(ResponseId_S2))
+```
+
+#### Condition
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(table(session2$Condition), col.names = c("Condition","Freq"))
+```
+
+#### School / Division
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(table(session2$schoolDivision), col.names = c("School / Division","Freq"))
+```
+
+#### Race
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(session2 %>% 
+  group_by(race) %>% 
+  summarise("n" = n()))
+#            "%" = ((n() / nrow(session2)) * 100))
+```
+
+#### Gender
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(session2 %>% 
+  group_by(gender) %>% 
+  summarise("n" = n()))
+```
+
+#### Manager
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+kable(table(session2$manager), col.names = c("Manager","Freq"))
+```
+
+:::
+
+## Perspective-Taking
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+perspectiveTaking_S2 <- data %>% 
+  dplyr::select(IRI_PT_1_S2, IRI_PT_2_S2, IRI_PT_3_S2, IRI_PT_4_S2)
+
+kable(alpha(perspectiveTaking_S2, na.rm=T, check.keys=T)$alpha)
+```
+
+::: panel-tabset
+
+#### a. 🟢
+
+**Over the last week while at work...**
+
+**If I was sure I was right about something, I didn't waste much time listening to other people’s arguments.**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_1_S2 ~ Condition + wave, data))
+# report::report(lm(IRI_PT_1_S2 ~ Condition + wave, data))
+
+plot1_S2 <- data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_1_S2)) +
+  geom_bar(stat="summary", position="dodge") + 
+  geom_jitter(color = "grey20") +
+  stat_sum_df("mean_cl_boot", geom = "errorbar", position= position_dodge(.9), conf.int=.68, width=0.2) +
+  expand_limits(y = c(1, 5)) +
+  scale_y_continuous(breaks=c(1:5)) +
+  theme_perez() +
+  scale_fill_grey() +
+  labs(y = "I didn't listen to other people’s arguments")
+
+# plot1_S2
+```
+
+#### b. 🟢
+
+**I sometimes tried to understand my coworkers better by imagining how things look from their perspective.**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_2_S2 ~ Condition + wave, data))
+# report::report(lm(IRI_PT_2_S2 ~ Condition + wave, data))
+
+plot2_S2 <- data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_2_S2)) +
+  geom_bar(stat="summary", position="dodge") + 
+  geom_jitter(color = "grey20") +
+  stat_sum_df("mean_cl_boot", geom = "errorbar", position= position_dodge(.9), conf.int=.68, width=0.2) +
+  expand_limits(y = c(1, 5)) +
+  scale_y_continuous(breaks=c(1:5)) +
+  theme_perez() +
+  scale_fill_grey() +
+  labs(y = "Tried to imagine how things look from \n my coworkers' perspective")
+
+# plot2_S2
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+ggarrange(plot1_S2, plot2_S2)
+```
+
+#### c. 🔴
+
+**I believed that there are two sides to every question and tried to look at them both.**
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_3_S2 ~ Condition + wave, data))
+```
+
+#### d. 🔴
+
+*I tried to look at everybody’s side of a disagreement before I make a decision.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT_4_S2 ~ Condition + wave, data))
+```
+
+:::
+
+::: {.callout-note collapse="true"}
+# Additional Outcomes
+
+## Trust 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(trustLeader_S2 = case_match(trustLeader_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(trustLeader_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(trustLeader_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(trustLeader_S2), sd(trustLeader_S2)))
+
+data <- data %>% 
+  mutate(trustManager_S2 = case_match(trustManager_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(trustManager_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(trustManager_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(trustManager_S2), sd(trustManager_S2)))
+```
+
+## Burnout 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(burnout_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(burnout_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(burnout_S2), sd(burnout_S2)))
+
+tab_model(lm(burnout_S2 ~ Condition * manager + wave, data))
+tab_model(lm(burnout_S2 ~ Condition * URM + wave, data))
+tab_model(lm(burnout_S2 ~ Condition * gender + wave, data))
+```
+
+## Relationships
+
+::: panel-tabset
+
+#### a. 🔴
+
+*It is important to maintain a positive relationship with co-workers who are hard to work with.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(workerRelations1_S2 = case_match(workerRelations1_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(workerRelations1_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(workerRelations1_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(workerRelations1_S2), sd(workerRelations1_S2)))
+
+tab_model(lm(workerRelations1_S2 ~ Condition * manager + wave, data))
+```
+
+#### b. 🔴
+
+*There are certain co-workers that I come into conflict with and nothing can be done to change that.*
+
+```{r}
+data <- data %>% 
+  mutate(workerRelations2_S2 = case_match(workerRelations2_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(workerRelations2_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(workerRelations2_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(workerRelations2_S2), sd(workerRelations2_S2)))
+
+tab_model(lm(workerRelations2_S2 ~ Condition * manager + wave, data))
+```
+
+#### c. 🔴
+
+*A culture of harmonious working relationships is a top priority for me.*
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(workerRelations3_S2 = case_match(workerRelations3_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(workerRelations3_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(workerRelations3_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(workerRelations3_S2), sd(workerRelations3_S2)))
+
+tab_model(lm(workerRelations3_S2 ~ Condition * manager + wave, data))
+```
+
+:::
+
+# Scenario
+
+::: panel-tabset
+
+#### Attributions 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(attributions_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(attributions_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(attributions_S2), sd(attributions_S2)))
+```
+
+#### Perspective-Taking 🟡
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(IRI_PT1_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(IRI_PT1_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(IRI_PT1_S2), sd(IRI_PT1_S2)))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+  filter(!is.na(manager)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT1_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") +
+  facet_wrap(~ manager) +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+
+tab_model(lm(IRI_PT2_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(IRI_PT2_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(IRI_PT2_S2), sd(IRI_PT2_S2)))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+  filter(!is.na(manager)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT2_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+```
+
+#### 360 🟡
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(X360_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(X360_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(X360_S2), sd(X360_S2)))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+  filter(!is.na(manager)) %>% 
+ggplot(aes(x=Condition, y=X360_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") +
+  facet_wrap(~ manager) +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Likelihood of Giving Feedback in 360")
+
+tab_model(lm(X360Valence_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(X360Valence_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(X360Valence_S2), sd(X360Valence_S2)))
+```
+
+#### Complaint 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(complaint_S2 = case_match(complaint_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(complaint_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(complaint_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(complaint_S2), sd(complaint_S2)))
+```
+
+#### Trust 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(trustManagerScenario_S2 = case_match(trustManagerScenario_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(trustManagerScenario_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(trustManagerScenario_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(trustManagerScenario_S2),
+            sd(trustManagerScenario_S2)))
+```
+
+#### Evaluative Concerns 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(evalConcern1_S2 = case_match(evalConcern1_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) %>% 
+  mutate(evalConcern2_S2 = case_match(evalConcern2_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) %>% 
+  mutate(evalConcern3_S2 = case_match(evalConcern3_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) %>% 
+   mutate(evalConcern4_S2 = case_match(evalConcern4_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) %>% 
+  mutate(evalConcern5_S2 = case_match(evalConcern5_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1))
+evalConcern <- data %>% 
+  dplyr::select(evalConcern1_S2, evalConcern2_S2, evalConcern3_S2, evalConcern4_S2, evalConcern5_S2)
+
+keys <- list("evalConcern1_S2", "evalConcern2_S2", "evalConcern3_S2", "evalConcern4_S2", "evalConcern5_S2")
+
+kable(alpha(evalConcern, na.rm=T, check.keys=T)$alpha)
+
+evalConcern_S2 <- scoreItems(keys, evalConcern, min = 1, max = 7)
+```
+
+$\alpha = 0.88$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(evalConcern1_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(evalConcern1_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(evalConcern1_S2), sd(evalConcern1_S2)))
+
+tab_model(lm(evalConcern2_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(evalConcern2_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(evalConcern2_S2), sd(evalConcern2_S2)))
+
+tab_model(lm(evalConcern3_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(evalConcern3_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(evalConcern3_S2), sd(evalConcern3_S2)))
+
+tab_model(lm(evalConcern4_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(evalConcern4_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(evalConcern4_S2), sd(evalConcern4_S2)))
+
+tab_model(lm(evalConcern5_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(evalConcern5_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(evalConcern5_S2), sd(evalConcern5_S2)))
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$evalConcernsAvg_S2 <- ((data$evalConcern1_S2 + data$evalConcern2_S2 + data$evalConcern3_S2 + data$evalConcern4_S2 + data$evalConcern5_S2)/5)
+
+tab_model(lm(evalConcernsAvg_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(evalConcernsAvg_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(evalConcernsAvg_S2), sd(evalConcernsAvg_S2)))
+```
+
+#### Engagement 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(engagement1_S2 = case_match(engagement1_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) %>% 
+  mutate(engagement2_S2 = case_match(engagement2_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) %>% 
+  mutate(engagment3_S2 = case_match(engagment3_S2, 
+                                         1 ~ 7,
+                                         2 ~ 6,
+                                         3 ~ 5,
+                                         4 ~ 4,
+                                         5 ~ 3,
+                                         6 ~ 2,
+                                         7 ~ 1)) 
+
+engagement <- data %>% 
+  dplyr::select(engagement1_S2, engagement2_S2, engagment3_S2)
+
+keys <- list("engagement1_S2", "engagement2_S2", "engagment3_S2")
+
+kable(alpha(engagement, na.rm=T, check.keys=T)$alpha)
+
+engagement_S2 <- scoreItems(keys, engagement, min = 1, max = 7)
+```
+
+$\alpha = 0.85$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$engagementAvg_S2 <- ((data$engagement1_S2 + data$engagement2_S2 + data$engagment3_S2)/3)
+
+tab_model(lm(engagementAvg_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(engagementAvg_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(engagementAvg_S2), sd(engagementAvg_S2)))
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(engagement1_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(engagement1_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(engagement1_S2), sd(engagement1_S2)))
+
+tab_model(lm(engagement2_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(engagement2_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(engagement2_S2), sd(engagement2_S2)))
+
+tab_model(lm(engagment3_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(engagment3_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(engagment3_S2), sd(engagment3_S2)))
+```
+
+#### Manager
+
+::: panel-tabset
+
+#### Environment 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(managerEnvironment_S2 = case_match(managerEnvironment_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1)) 
+
+tab_model(lm(managerEnvironment_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(managerEnvironment_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(managerEnvironment_S2), sd(managerEnvironment_S2)))
+```
+
+#### Mindset 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(managerMindset1_S2 = case_match(managerMindset1_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1)) %>% 
+  mutate(managerMindset2_S2 = case_match(managerMindset2_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1)) %>% 
+  mutate(managerMindset3_S2 = case_match(managerMindset3_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1)) %>% 
+   mutate(managerMindset4_S2 = case_match(managerMindset4_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1)) %>% 
+  mutate(managerMindset5_S2 = case_match(managerMindset5_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1)) %>% 
+  mutate(managerMindset6_S2 = case_match(managerMindset6_S2, 
+                                         1 ~ 6,
+                                         2 ~ 5,
+                                         3 ~ 4,
+                                         4 ~ 3,
+                                         5 ~ 2,
+                                         6 ~ 1))
+
+mindset <- data %>% 
+  dplyr::select(managerMindset1_S2, managerMindset2_S2, managerMindset3_S2, managerMindset4_S2, managerMindset5_S2, managerMindset6_S2)
+
+keys <- list("managerMindset1_S2", "managerMindset2_S2", "managerMindset3_S2", "managerMindset4_S2", "managerMindset5_S2", "managerMindset6_S2")
+
+kable(alpha(mindset, na.rm=T, check.keys=T)$alpha)
+
+mindset_S2 <- scoreItems(keys, mindset, min = 1, max = 6)
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$mindsetAvg_S2 <- ((data$managerMindset1_S2 + data$managerMindset2_S2 + data$managerMindset3_S2 + data$managerMindset4_S2 + data$managerMindset5_S2 + data$managerMindset6_S2)/6)
+
+tab_model(lm(mindsetAvg_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(mindsetAvg_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(mindsetAvg_S2), sd(mindsetAvg_S2)))
+
+tab_model(lm(managerMindset1_S2 ~ Condition, data))
+tab_model(lm(managerMindset2_S2 ~ Condition, data))
+tab_model(lm(managerMindset3_S2 ~ Condition, data))
+summary(lm(managerMindset4_S2 ~ Condition, data))
+summary(lm(managerMindset5_S2 ~ Condition, data))
+summary(lm(managerMindset6_S2 ~ Condition, data))
+```
+
+:::
+:::
+
+# Belonging
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+belonging <- data %>% 
+  dplyr::select(belonging1_S2, belonging2_S2, belonging3_S2, belonging4_S2, belonging5_S2)
+
+keys <- list("belonging1_S2", "belonging2_S2", "belonging3_S2", "belonging4_S2", "belonging5_S2")
+
+kable(alpha(belonging, na.rm=T, check.keys=T)$alpha)
+
+belonging_S2 <- scoreItems(keys, belonging, min = 1, max = 6)
+```
+
+$\alpha = 0.91$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$belongingAvg_S2 <- ((data$belonging1_S2 + data$belonging2_S2 + data$belonging3_S2 + data$belonging4_S2 + data$belonging5_S2)/5)
+
+tab_model(lm(belongingAvg_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(belongingAvg_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(belongingAvg_S2), sd(belongingAvg_S2)))
+
+tab_model(lm(belongingAvg_S2 ~ Condition * manager + wave, data))
+tab_model(lm(belongingAvg_S2 ~ Condition * URM + wave, data))
+tab_model(lm(belongingAvg_S2 ~ Condition * gender, data))
+
+data %>% 
+  filter(!is.na(Condition)) %>% 
+  filter(!is.na(gender)) %>% 
+ggplot(aes(x=Condition, y=belongingAvg_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="lightblue", color = "grey40") +
+  facet_wrap(~ gender) +
+  expand_limits(y = c(1, 6)) +
+  theme_bw() +
+  labs(y = "Belonging")
+```
+
+# Sense of Fit
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+fit <- data %>% 
+  dplyr::select(fit1_S2, fit2_S2, fit3_S2)
+
+kable(alpha(fit, na.rm=T, check.keys=T)$alpha)
+```
+
+$\alpha = 0.91$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$fitAvg_S2 <- ((data$fit1_S2 + data$fit2_S2 + data$fit3_S2)/3)
+
+tab_model(lm(fitAvg_S2 ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(fitAvg_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(fitAvg_S2), sd(fitAvg_S2)))
+
+tab_model(lm(fitAvg_S2 ~ Condition * manager + wave, data))
+tab_model(lm(fitAvg_S2 ~ Condition * URM + wave, data))
+tab_model(lm(fitAvg_S2 ~ Condition * gender + wave, data))
+```
+
+## Resume 🔴
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(intelligent_S2 = case_match(intelligent_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(intelligent_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(intelligent_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(intelligent_S2), sd(intelligent_S2)))
+
+data <- data %>% 
+  mutate(motivated_S2 = case_match(motivated_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+tab_model(lm(motivated_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(motivated_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(motivated_S2), sd(motivated_S2)))
+
+tab_model(lm(applicant_1_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(applicant_1_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(applicant_1_S2), sd(applicant_1_S2)))
+
+tab_model(lm(applicant_2_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(applicant_2_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(applicant_2_S2), sd(applicant_2_S2)))
+
+tab_model(lm(applicant_3_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(applicant_3_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(applicant_3_S2), sd(applicant_3_S2)))
+
+tab_model(lm(applicant_4_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(applicant_4_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(applicant_4_S2), sd(applicant_4_S2)))
+```
+
+# Supplement
+
+## Control Manipulation Check
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+tab_model(lm(manipControl ~ Condition, data))
+
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(manipControl)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(manipControl), sd(manipControl)))
+```
+
+## SOW
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(SOW_2_1 = case_match(SOW_2_1, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(SOW_2_2 = case_match(SOW_2_2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(SOW_2_3 = case_match(SOW_2_3, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+   mutate(SOW_2_4 = case_match(SOW_2_4, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(SOW_2_5 = case_match(SOW_2_5, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+SOW <- data %>% 
+  dplyr::select(SOW_2_1, SOW_2_2, SOW_2_3, SOW_2_4, SOW_2_5)
+
+keys <- list("SOW_2_1", "SOW_2_2", "SOW_2_3", "SOW_2_4", "SOW_2_5")
+
+kable(alpha(SOW, na.rm=T, check.keys=T)$alpha)
+
+SOW_S2 <- scoreItems(keys, SOW, min = 1, max = 5)
+```
+
+$\alpha = 0.88$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$SOW_S2 <- ((data$SOW_2_1 + data$SOW_2_2 + data$SOW_2_3 + data$SOW_2_4 + data$SOW_2_5)/5)
+
+tab_model(lm(SOW_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(SOW_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(SOW_S2), sd(SOW_S2)))
+```
+
+## Professional Fulfillment
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data <- data %>% 
+  mutate(PFI1_1_S2 = case_match(PFI1_1_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(PFI1_1_S2 = case_match(PFI1_1_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(PFI1_3_S2 = case_match(PFI1_3_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+   mutate(PFI1_4_S2 = case_match(PFI1_4_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(PFI1_5_S2 = case_match(PFI1_5_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1)) %>% 
+  mutate(PFI1_6_S2 = case_match(PFI1_6_S2, 
+                                         1 ~ 5,
+                                         2 ~ 4,
+                                         3 ~ 3,
+                                         4 ~ 2,
+                                         5 ~ 1))
+
+PFI1 <- data %>% 
+  dplyr::select(PFI1_1_S2, PFI1_2_S2, PFI1_3_S2, PFI1_4_S2, PFI1_5_S2, PFI1_6_S2)
+
+keys <- list("PFI1_1_S2", "PFI1_2_S2", "PFI1_3_S2", "PFI1_4_S2", "PFI1_5_S2", "PFI1_6_S2")
+
+kable(alpha(PFI1, na.rm=T, check.keys=T)$alpha)
+
+PFI1_S2 <- scoreItems(keys, PFI1, min = 1, max = 5)
+```
+
+$\alpha = 0.91$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$PFI1_S2 <- ((data$PFI1_1_S2 + data$PFI1_2_S2 + data$PFI1_3_S2 + data$PFI1_4_S2 + data$PFI1_5_S2 + data$PFI1_6_S2)/6)
+
+tab_model(lm(PFI1_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(PFI1_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(PFI1_S2), sd(PFI1_S2)))
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+PFI2 <- data %>% 
+  dplyr::select(PFI2_1_S2, PFI2_2_S2, PFI2_3_S2, PFI2_4_S2)
+
+keys <- list("PFI2_1_S2", "PFI2_2_S2", "PFI2_3_S2", "PFI2_4_S2")
+
+kable(alpha(PFI2, na.rm=T, check.keys=T)$alpha)
+
+PFI2_S2 <- scoreItems(keys, PFI2, min = 1, max = 5)
+```
+
+$\alpha = 0.88$
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+data$PFI2_S2 <- ((data$PFI2_1_S2 + data$PFI2_2_S2 + data$PFI2_3_S2 + data$PFI2_4_S2)/4)
+
+tab_model(lm(PFI2_S2 ~ Condition, data))
+kable(data %>% 
+  filter(!is.na(Condition), !is.na(PFI2_S2)) %>% 
+  group_by(Condition) %>% 
+  summarise(mean(PFI2_S2), sd(PFI2_S2)))
+```
+
+:::

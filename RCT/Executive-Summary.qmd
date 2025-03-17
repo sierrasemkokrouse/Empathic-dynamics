@@ -1,0 +1,426 @@
+---
+title: "Executive Summary"
+subtitle: "Workplace Intervention (Empathic-dynamics)"
+author: "SSK"
+date: "today"
+format: 
+  html:
+    toc: TRUE
+    embed-resources: TRUE
+    self-contained-math: TRUE
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=F}
+library(tidyverse)
+library(psych)
+library(knitr)
+```
+
+```{r, include=F}
+data <- read.csv("clean_fulldata_20240910.csv")
+```
+
+# Findings
+
+## Overview
+
+In Session 1, participants in the study were randomized to receive the intervention or the control condition. The intervention condition focused on how complex individuals are, even at work, and how tapping into multiple aspects of oneself can be positive. The intervention condition also focused on how experiences at work can improve over time. The control condition was a similar length but did not talk about work experiences at all. Both conditions were engaging, asking participants to read materials and explore their reactions to them in written responses.
+
+All participants then responded to outcome measures. The outcome measures ranged widely from general thoughts and feelings (e.g., about others at work) to responses to specific workplace scenarios. The full list of outcome measures in the study is located at the end of this report.
+
+Reported here are the findings which were marginally or statistically significant.
+
+## Confirmatory Hypotheses
+
+Compared to the control condition, participants who received the intervention reported...
+
+-   Higher likelihood to prioritize a positive **workplace relationship** with *every* coworker.
+-   More belief that **others at work have multiple selves and are highly complex.**
+-   Greater **perspective-taking** during disagreements at work.
+
+## Exploratory Hypotheses
+
+Furthermore, participants who received the intervention reported more **perspective-taking** in response to challenging scenario with a manager.
+
+## Session 2
+
+Some participants also elected to complete a session 2 one week after receiving the intervention or control. Compared to participants who had received the control condition, participants who had received the intervention one week prior reported...
+
+-   Having engaged in more **perspective-taking** at work over the past week.
+-   Greater **perspective-taking** in response to a new challenging scenario with a manager.
+
+A full list of outcome variables is provided at the end of this report and analyses can be provided upon request.
+
+## Hypotheses Rationale
+
+We included these hypotheses in order to measure the effect of the intervention on employees *mindsets about work.* Mindsets can shift in a short amount of time, making them appropriate to measure immediately or one week after administering an intervention like this one.
+
+Shifts in mindsets over a greater amount of time (months or even years) have been shown to promote positive *shifts in behavior.* For example, if an individual's mindset promotes believing that their coworkers are complex individuals who are managing multiple parts of themselves (e.g., the part that is a parent, caretaker, sports fan, manager of subordinates at work, and is managed by their own supervisor, etc.), it is likely that they will be able to identify with that person and will have more empathic interactions with that person. Furthermore, when challenges arise in their working relationship, the individual will probably be more willing to address them positively.
+
+Though the current study was across too short a time frame to measure behavioral outcomes, the mindset changes measured in this study may indeed create positive shifts in outcomes like turnover and organizational culture.
+
+# Session 1
+
+## Confirmatory 1: More relationship-prioritization
+
+Participants who received the intervention reported more prioritization of workplace relationships.
+
+Item: *How likely are you to prioritize establishing a positive relationship with every single co-worker in your workplace?*
+
+```{r, include=F}
+summary(lm(manipTreat1 ~ Condition + wave, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=manipTreat1)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 7)) +
+  theme_bw() +
+  labs(y = "Prioritization of Positive Workplace Relationships")
+```
+
+*p* = 0.04
+
+## Confirmatory 2: More multiple-selves / Complexity Beliefs
+
+Participants who received the intervention reported believing more that their coworkers are complex and multidimensional individuals.
+
+Item: *How much do you agree with the following statement?: Everyone in the workplace is complex inside and is capable of tapping into different parts of themself.*
+
+```{r, include=F}
+summary(lm(manipTreat2_recode ~ Condition + wave, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=manipTreat2_recode)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Multiple-selves / Complexity Beliefs")
+```
+
+*p* \< 0.01
+
+## Confirmatory 3: More perspective-taking
+
+Participants who received the intervention reported that they planned to engage in more perspective-taking over the next 2 weeks while at work.
+
+```{r, include=F}
+perspectiveTaking <- data %>% 
+  dplyr::select(IRI_PT_1, IRI_PT_2, IRI_PT_3, IRI_PT_4)
+
+alpha(perspectiveTaking, na.rm=T, check.keys=T)
+```
+
+::: panel-tabset
+#### Item 1
+
+Item 1: *I will believe that there are two sides to every question and try to look at them both.*
+
+```{r, include=F}
+summary(lm(IRI_PT_3 ~ Condition + wave, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_3)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-taking")
+```
+
+#### Item 2
+
+Item 2: *I will try to look at everybody’s side of a disagreement before I make a decision.*
+
+```{r, include=F}
+summary(lm(IRI_PT_4 ~ Condition + wave, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_4)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") + 
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-taking")
+```
+:::
+
+## Exploratory 1: Manager Scenario
+
+All participants read the following scenario and responded to outcome measures:
+
+***You just started reporting to a new manager. After a few weeks, you notice that the new manager has built rapport with some of your colleagues but hasn’t made much effort to get to know you. The new manager has several impromptu meetings per week and seems to forget to loop you in. Although you have been asked to pick up extra work, the manager doesn’t seem to acknowledge your effort or thank you for doing additional tasks.***
+
+### More perspective-taking
+
+Participants who received the intervention reported more perspective-taking of the manager.
+
+Item: *Before criticizing this manager, I would try to imagine how I would feel if I were in their place.*
+
+```{r, include=F}
+summary(lm(IRI_PT1_2 ~ Condition + wave + manager, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT1_2)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+```
+
+*p* = 0.07
+
+## Session 1 Demographics
+
+Below, we can see characteristics of the participants in Session 1.
+
+::: panel-tabset
+#### Condition
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$Condition), col.names = c("Condition", "Freq"))
+```
+
+#### School / Division
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$schoolDivision), col.names = c("School / Division","Freq"))
+```
+
+#### Academic / Staff
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$academic), col.names = c("Academic / Staff","Freq"))
+```
+
+#### Manager
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$manager), col.names = c("Manager","Freq"))
+
+ggplot(data, aes(x=managerHowMany)) +
+  geom_density() +
+  labs(x = "# of Employees Managing",
+       y = "Density") +
+  theme_bw()
+```
+
+#### Gender
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$gender), col.names = c("Gender","Freq"))
+```
+
+#### Race
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$race), col.names = c("Race","Freq"))
+```
+
+#### SES
+
+```{r, echo=F, warning=F, message=F}
+kable(table(data$income), col.names = c("Income","Freq"))
+
+kable(psych::describe(data$ladder))
+
+ggplot(data, aes(ladder)) +
+  geom_density(bins=20, fill="lightblue", alpha=0.8) +
+  theme_minimal() +
+  xlim(limits=c(1,10)) +
+  labs(x = "Ladder",
+       y = "Respondents")
+```
+:::
+
+# Session 2
+
+## More perspective-taking over the past week
+
+::: panel-tabset
+#### Item 1
+
+*Over the last week while at work...*
+
+Item 1: *If I was sure I was right about something, I didn't waste much time listening to other people’s arguments.*
+
+```{r, include=F}
+summary(lm(IRI_PT_1_S2 ~ Condition + wave, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_1_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+```
+
+*p* \< 0.01
+
+#### Item 2
+
+Item 2: *I sometimes tried to understand my coworkers better by imagining how things look from their perspective.*
+
+```{r, include=F}
+summary(lm(IRI_PT_2_S2 ~ Condition + wave, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT_2_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+```
+
+*p* \< 0.01
+:::
+
+## Manager Scenario
+
+All participants in Session 2 read a new scenario about a manager and responded to outcome measures.
+
+Scenario: ***Your new manager, unlike your previous manager, frequently requests that you get their approval before you make any decision in your work and constantly messages you asking for updates. The new manager seems to forget to CC you on important emails that are related to your job duties, but gets frustrated if they aren't CC'd on every email that you or your teammates send. When you recently made a minor mistake, the manager brought attention to it and mentioned it to others on your team.***
+
+### More perspective-taking
+
+```{r, include=F}
+summary(lm(IRI_PT2_S2 ~ Condition + wave + manager, data))
+```
+
+```{r, echo=F, warning=F, message=F}
+data %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=IRI_PT2_S2)) +
+  geom_bar(stat="summary", position="dodge", fill="#BC9B6A", color="#002676") +
+  expand_limits(y = c(1, 5)) +
+  theme_bw() +
+  labs(y = "Perspective-Taking")
+```
+
+*p* = 0.08
+
+## Session 2 Demographics
+
+::: panel-tabset
+```{r, include=F}
+session2 <- data %>% 
+  filter(!is.na(ResponseId_S2))
+```
+
+#### Condition
+
+```{r, echo=F, warning=F, message=F}
+kable(table(session2$Condition), col.names = c("Condition","Freq"))
+```
+
+#### School / Division
+
+```{r, echo=F, warning=F, message=F}
+kable(table(session2$schoolDivision), col.names = c("School / Division","Freq"))
+```
+
+#### Race
+
+```{r, echo=F, warning=F, message=F}
+kable(table(session2$race), col.names = c("Race","Freq"))
+```
+
+#### Gender
+
+```{r, echo=F, warning=F, message=F}
+kable(table(session2$gender), col.names = c("Gender","Freq"))
+```
+
+#### Manager
+
+```{r, echo=F, warning=F, message=F}
+kable(table(session2$manager), col.names = c("Manager","Freq"))
+```
+:::
+
+::: {.callout-note collapse="true"}
+# Full List of Outcome Measures
+
+After the scenarios conditions, we will explore the following DVs: 
+
+- Attributions made for the coworkers behavior (1-item: 1 - Behavior is primarily due to who they are as a person to 5 - Behavior is primarily due to circumstances that are beyond their control). 
+- Difficulty to work with coworker (1-item: “How likely is it that you would find it hard to work with this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
+- Valued feelings (1-item: “How likely is it that you would feel valued by this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
+- Willingness to give 360 feedback (1-item: “I would be willing to give extensive feedback to this employee / manager in a 360 assessment process.” 1 – Strongly disagree to 5 – Strongly agree). 
+- Likelihood of formal complaint (1-item: “How likely is it that you would submit a formal complaint about this employee / manager at some point?” 1 – Not at all likely to 5 – Extremely likely). 
+- Response to situation (1-item: “In your own words, how would you respond or not respond in this situation? Please be as detailed as possible.” Open-ended). 
+- Willingness to put in effort ( 1-item: “I would be willing to put in extra effort if this manager asked me to.” 1 – Extremely disagree to 7 – Extremely agree). 
+- Trust of coworker (1-item: “How likely is it that you would trust this manager?” 1 – Not at all likely to 5 – Extremely likely). - Trust of organization leader (1-item: “How likely is it that you would trust the leader of your school, college, division or equivalent?” 1 – Not at all likely to 5 – Extremely likely).
+
+Demographic variables: 
+
+- Years of experience in current position 
+- Years of experience working in the organization 
+- Years of experience as a manager experience 
+- Participant SES (Subjective using MacArthur ladder; education; household income; childhood zipcode) 
+- Participant age
+
+We will explore the impact of the intervention on the following Session 2 outcomes: 
+
+- Trust of organization leader (1-item: “I trust the leader of my school, college, division or equivalent.” 1 – Not at all to 5 – Extremely). 
+- Trust of manager (1-item: “I trust my manager.” 1 – Not at all to 5 – Extremely). 
+- Importance of worker relationships (3-items. 1 – Strongly disagree to 5 – Strongly agree): 1. “It is important to maintain a positive relationship with co-workers who are hard to work with.” 2. “There are certain co-workers that I come into conflict with and nothing can be done to change that.” 3.“A culture of harmonious working relationships is a top priority for me.” 
+- Professional fulfillment (from the Professional Fulfillment Index; Trockel et al., 2018) 
+- Belonging (5-items: 1 – Not at all to 7 – Extremely) 
+  - 1. “How comfortable do you feel at UC Berkeley?” 
+  - 2. “How much do you feel that you could “be yourself” at UC Berkeley?” 
+  - 3. “How accepted do you feel at UC Berkeley?” 
+  - 4. “How alienated do you feel at UC Berkeley?” 
+  - 5. “How much do you feel like you “fit in” at UC Berkeley?” 
+- Sense of social fit (3-items: 1 – Strongly disagree to 7 – Strongly agree) 
+  - 1. “Working at UC Berkeley feels natural.” 
+  - 2. “Working at UC Berkeley is a good fit for me.” 
+  - 3. “Working at UC Berkeley feels right.”
+
+In response to a mock job application in Session 2: 
+
+- Perceived application intelligence (1-item: “This applicant is intelligent.” 1 – Strongly disagree to 5 – Strongly agree) 
+- Perceived application motivation (1-item: “This applicant is motivated.” 1 – Strongly disagree to 5 – Strongly agree) 
+- Interest in working with applicant (1-item: “How likely are you to ...want to work with this applicant?” 1 – Extremely unlikely to 5 – Extremely likely). 
+- Desire to offer interview to application (1-item: “How likely are you to ...want to offer an interview to this applicant?” 1 – Extremely unlikely to 5 – Extremely likely). 
+- Desire to hire applicant (1-item: “How likely are you to ...hire this applicant? 1 – Extremely unlikely to 5 – Extremely likely). 
+- Likelihood of applicant promotion (1-item: “How likely are you to ...be promoted within the first year? 1 – Extremely unlikely to 5 – Extremely likely). 
+- Interview questions (1-item: “What would you ask this applicant in an interview? Please list at least 3 questions that you would like to ask this applicant. Include a brief description of why you included each questions.” Open-ended).
+
+In response to a vignette in Session 2: 
+
+- How they would feel (1-item; Open-ended). 
+- Causes for coworker behavior (1-item: “What might be causing this employee / manager’s behavior? Please list everything that you can think of.” Open-ended). 
+- Perspective-taking (1-items: “Before criticizing this employee / manager, I would try to imagine how I would feel if I were in their place.”; “I would try to “put myself in the shoes” of this employee / manager for a while.” 1 – Strongly disagree to 5 – Strongly agree) 
+- Difficulty to work with coworker (1-item: “How likely is it that you would find it hard to work with this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
+- Valued feelings (1-item: “How likely is it that you would feel valued by this employee / manager at some point in the next month?” 1 – Not at all likely to 5 – Extremely likely). 
+- Willingness to give 360 feedback (1-item: “I would be willing to give extensive feedback to this employee / manager in a 360 assessment process.” 1 – Strongly disagree to 5 – Strongly agree). 
+- Valance of 360 feedback (1-item: “If I were to give feedback to this employee / manager in a 360 assessment process, the feedback would be...” 1 – Entirely negative to 7 – Entirely positive). 
+- Likelihood of formal complaint (1-item: “How likely is it that you would submit a formal complaint about this employee / manager at some point?” 1 – Not at all likely to 5 – Extremely likely). 
+- Content of formal complaint (1-item: “If you were to submit a formal complaint, please enter what you would write in it.” Open-ended). 
+- Response to situation (1-item: “In your own words, how would you respond or not respond in this situation? Please be as detailed as possible.” Open-ended). 
+- Willingness to put in effort ( 1-item: “I would be willing to put in extra effort if this manager asked me to.” 1 – Extremely disagree to 7 – Extremely agree). 
+- Trust of coworker (1-item: “How likely is it that you would trust this manager?” 1 – Not at all likely to 5 – Extremely likely).
+
+:::

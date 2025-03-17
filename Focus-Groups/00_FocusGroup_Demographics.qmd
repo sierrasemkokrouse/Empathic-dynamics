@@ -1,0 +1,149 @@
+---
+title: "00-FocusGroups"
+subtitle: "Empathic-dynamics Intervention"
+format:
+  html:
+    self-contained: true
+    toc: true
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=F}
+library(tidyverse)
+library(psych)
+library(knitr)
+```
+
+```{r, include=F}
+data <- read.csv("Focus+Groups_February+13,+2023_11.17.csv")
+
+data <- data[-1,]
+data <- data[-1,]
+```
+
+```{r, include=F}
+data$manager <- factor(data$manager, labels=c("NA","Yes","No"))
+```
+
+```{r, include=F}
+data$race <- factor(data$race, labels=c("NA", "White/Caucasian","Asian/Asian American","Black/African American", "Hispanic or Latino/a", "Multiracial", "Other"))
+```
+
+```{r, include=F}
+data$gender <- factor(data$gender, labels=c("NA","Male","Female","Other"))
+```
+
+```{r, include=F}
+data$ladder <- as.numeric(data$ladder)
+
+data$ed <- factor(data$ed, labels=c("NA", "High school education", "College graduation", "Postgraduate degree"))
+
+data$income <- factor(data$income, labels=c("NA", "$75,001-$100,000", "$100,001-$150,000", "greater than $150,000"))
+
+data$incomeChild <- factor(data$incomeChild, labels=c("NA", "less than $15,000", "$15,000-$30,000", "$30,001-$50,000", "$50,001-$75,000", "$75,001-$100,000", "$100,001-$150,000", "greater than $150,000"))
+
+data$disability_status <- factor(data$disability_status, labels=c("NA", "Yes, Cognitive", "Yes, Emotional", "Yes, Mental", "Yes, Self Identify", "No", "Prefer not to answer"))
+
+data$disability_status <- factor(data$disability_work, labels=c("NA", "Yes", "No", "Prefer not to answer"))
+
+data$job_Years_1 <- as.numeric(data$job_Years_1)
+
+data$employer_Years <- as.numeric(data$employer_Years)
+
+data$age <- as.numeric(data$age)
+```
+
+# TL;DR
+
+# Respondent Demographics
+
+We then examine the demographic characteristics of respondents.
+
+Click through the tabs below to see details.
+
+::: panel-tabset
+## Managerial Role
+
+We first examine how many participants manage other employees in their current role.
+
+```{r, echo=F, warning=F}
+kable(table(data$manager), col.names=c("Do you manage employees?", "n"))
+```
+
+## Years of Experience
+
+We then examine number of years spent in their current role.
+
+```{r, echo=F, warning=F}
+kable(psych::describe(data$job_Years_1))
+
+ggplot(data, aes(job_Years_1)) +
+  geom_density(bins=20, fill="lightblue", alpha=0.8) +
+  theme_minimal() +
+  xlim(limits=c(1,10)) +
+  labs(x = "Number of Years in Current Job",
+       y = "Respondents")
+```
+
+We then look at years of experience as a UC Berkeley employee more broadly.
+
+```{r, echo=F, warning=F}
+kable(psych::describe(data$employer_Years))
+
+ggplot(data, aes(employer_Years)) +
+  geom_density(bins=20, fill="lightblue", alpha=0.8) +
+  theme_minimal() +
+  xlim(limits=c(1,10)) +
+  labs(x = "Number of Years Empoyed by UC Berkeley",
+       y = "Respondents")
+```
+:::
+
+::: panel-tabset
+## Race
+
+```{r, echo=F}
+kable(table(data$race), col.names=c("Race", "n"))
+```
+
+## Gender
+
+```{r, echo=F}
+kable(table(data$gender), col.names=c("Race", "n"))
+```
+
+## SES
+
+```{r, echo=F, warning=F}
+kable(table(data$ed), col.names=c("Level of Education", "n"))
+
+ggplot(data, aes(ladder)) +
+  geom_density(bins=20, fill="lightblue", alpha=0.8) +
+  theme_minimal() +
+  xlim(limits=c(1,10)) +
+  labs(x = "Ladder Position Chosen",
+       y = "Respondents")
+
+kable(table(data$incomeChild), col.names=c("Childhood Income", "n"))
+```
+
+## Age
+
+```{r, echo=F, warning=F}
+kable(psych::describe(data$age))
+
+ggplot(data, aes(age)) +
+  geom_density(bins=20, fill="lightblue", alpha=0.8) +
+  theme_minimal() +
+  labs(x = "Age",
+       y = "Respondents")
+```
+
+## Disability Status
+
+```{r, echo=F}
+kable(table(data$disability_status), col.names=c("Disability Status", "n"))
+```
+:::

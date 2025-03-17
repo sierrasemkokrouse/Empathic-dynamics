@@ -1,0 +1,4 @@
+- source: 00_FocusGroup_Demographics.qmd
+  quarto-pub:
+    - id: 0a66d937-2faa-4b42-8057-7af5244d5be1
+      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics_focus-groups'

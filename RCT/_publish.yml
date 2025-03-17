@@ -1,0 +1,24 @@
+- source: 01-Analyses.qmd
+  quarto-pub:
+    - id: c8b725ac-55c9-4e70-b7c6-1a64f0c22e60
+      url: 'https://sierrasemkokrouse.quarto.pub/workplace-intervention_01-analyses'
+- source: FocusGroup-Demographics3.qmd
+  quarto-pub:
+    - id: 941f3508-14cb-4656-800d-06fe715007e7
+      url: 'https://sierrasemkokrouse.quarto.pub/01-focusgroups-b362'
+- source: 03-Findings.qmd
+  quarto-pub:
+    - id: 1f5cdba1-8347-43fc-8c4f-c47bc40aab03
+      url: 'https://sierrasemkokrouse.quarto.pub/workplace-intervention_03-findings'
+- source: Executive-Summary.qmd
+  quarto-pub:
+    - id: c2147587-5a14-46c6-b282-fcb680ea2200
+      url: 'https://sierrasemkokrouse.quarto.pub/executive-summary'
+    - id: 3a7286d0-bb0a-464c-bd28-f5284bf7367c
+      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics_executive-summary'
+- source: 04_Manuscript.qmd
+  quarto-pub:
+    - id: 171caa94-20a0-4840-8782-eca029522661
+      url: 'https://sierrasemkokrouse.quarto.pub/workplace-intervention_01-analyses-cd89'
+    - id: 3cfbbc90-cfaf-4bae-973c-cc9d90df3c58
+      url: 'https://sierra-semkokrouse.quarto.pub/empathic-dynamics_intervention_04-analyses'

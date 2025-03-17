@@ -1,0 +1,91 @@
+---
+title: "00-Prelim"
+author: "Sierra Semko"
+date: "2024-01-05"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(psych)
+```
+
+```{r}
+data <- read.csv("workplace-data_20240105.csv")
+```
+
+```{r}
+table(data$Condition)
+```
+
+# Remove unassigned participants
+```{r}
+data <- data %>% 
+  filter(Condition != "")
+```
+
+# Confirmatory
+```{r}
+t.test(data$manipTreat1 ~ data$Condition)
+
+ggplot(data, aes(x=Condition, y=manipTreat1)) +
+  geom_bar(stat="summary", position="dodge")
+
+t.test(data$manipTreat2 ~ data$Condition)
+
+ggplot(data, aes(x=Condition, y=manipTreat2)) +
+  geom_bar(stat="summary", position="dodge")
+
+t.test(data$IRI_PT_1 ~ data$Condition)
+t.test(data$IRI_PT_2 ~ data$Condition)
+t.test(data$IRI_PT_3 ~ data$Condition)
+t.test(data$IRI_PT_4 ~ data$Condition)
+
+perspectiveTaking <- data %>% 
+  dplyr::select(IRI_PT_1, IRI_PT_2, IRI_PT_3, IRI_PT_4)
+
+alpha(perspectiveTaking, na.rm=T)
+
+# Coworker scenario
+t.test(data$attributions_1 ~ data$Condition)
+t.test(data$IRI_PT1_1 ~ data$Condition)
+t.test(data$IRI_PT2_1 ~ data$Condition)
+t.test(data$X360_1 ~ data$Condition)
+
+# Manager scenario
+t.test(data$attributions_2 ~ data$Condition)
+t.test(data$IRI_PT1_2 ~ data$Condition)
+t.test(data$IRI_PT2_2 ~ data$Condition)
+t.test(data$engagement ~ data$Condition)
+
+# Burnout
+t.test(data$burnout ~ data$Condition)
+ggplot(data, aes(x=Condition, y=burnout)) +
+  geom_bar(stat="summary", position="dodge")
+```
+
+# Session 2
+```{r}
+session2 <- read.csv("workplace_session2_20240107.csv")
+```
+
+```{r}
+session1key <- data %>% 
+  select(email, Condition)
+```
+
+```{r}
+session2Full <- left_join(session2, session1key, by = "email")
+```
+
+```{r}
+t.test(session2Full$burnout ~ session2Full$Condition)
+
+session2Full %>% 
+  filter(!is.na(Condition)) %>% 
+ggplot(aes(x=Condition, y=burnout)) +
+  geom_bar(stat="summary", position="dodge")
+```
+
