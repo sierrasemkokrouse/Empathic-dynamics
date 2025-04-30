@@ -23,6 +23,8 @@ library(knitr)
 library(report)
 library(ggpubr)
 library(sjPlot)
+library(effectsize)
+library(pwr)
 ```
 
 ```{r}
@@ -81,7 +83,7 @@ bars <- geom_bar(stat="summary", fun.y="mean", position="dodge")
 #| warning: false
 #| message: false
 #| code-fold: true
-data <- read.csv("clean_fulldata_20240910.csv")
+data <- read.csv("RCT/clean_fulldata_20240910.csv")
 ```
 
 # High-Level Findings
@@ -231,10 +233,15 @@ ggplot(data, aes(ladder)) +
 #| code-fold: true
 kable(psych::describe(data$manipTreat1), row.names = F)
 
-tab_model(lm(manipTreat1 ~ Condition + wave, data))
+mod1 <- lm(manipTreat1 ~ as.factor(Condition) + wave, data)
+tab_model(mod1)
 # report::report(lm(manipTreat1 ~ Condition + wave, data))
+etasq1 <- eta_squared(mod1)
+fsq1 <- effectsize::eta2_to_f2(etasq1$Eta2_partial)
+v = df.residual(mod1)
+pwr.f2.test(u = 1, v = v, f2 = fsq1, sig.level = 0.05)
 
-plot1 <- data %>% 
+plot1 <- data %>%  
   filter(!is.na(Condition)) %>% 
 ggplot(aes(x=Condition, y=manipTreat1)) +
   geom_bar(stat="summary", position="dodge") +
@@ -259,8 +266,14 @@ plot1
 #| code-fold: true
 kable(psych::describe(data$manipTreat2_recode), row.names = F)
 
-tab_model(lm(manipTreat2_recode ~ Condition + wave, data))
+mod2 <- lm(manipTreat2_recode ~ Condition + wave, data)
+tab_model(mod2)
 # report::report(lm(manipTreat2_recode ~ Condition + wave, data))
+etasq2 <- eta_squared(mod2)
+fsq2 <- effectsize::eta2_to_f2(etasq2$Eta2_partial)
+v = df.residual(mod2)
+pwr.f2.test(u = 1, v = v, f2 = fsq2, sig.level = 0.05)
+
 
 plot2 <- data %>% 
   filter(!is.na(Condition)) %>% 
@@ -312,8 +325,13 @@ $\alpha = 0.62$
 #| warning: false
 #| message: false
 #| code-fold: true
-tab_model(lm(IRI_PT_4 ~ Condition + wave, data))
+mod3 <- lm(IRI_PT_4 ~ Condition + wave, data)
+tab_model(mod3)
 # report::report(lm(IRI_PT_4 ~ Condition + wave, data))
+etasq3 <- eta_squared(mod3)
+fsq3 <- effectsize::eta2_to_f2(etasq3$Eta2_partial)
+v = df.residual(mod3)
+pwr.f2.test(u = 1, v = v, f2 = fsq3, sig.level = 0.05)
 
 plot3 <- data %>% 
   filter(!is.na(Condition)) %>% 
@@ -338,8 +356,13 @@ plot3
 #| warning: false
 #| message: false
 #| code-fold: true
-tab_model(lm(IRI_PT_3 ~ Condition + wave, data))
+mod4 <- lm(IRI_PT_3 ~ Condition + wave, data)
+tab_model(mod4)
 # report::report(lm(IRI_PT_3 ~ Condition + wave, data))
+etasq4 <- eta_squared(mod4)
+fsq4 <- effectsize::eta2_to_f2(etasq4$Eta2_partial)
+v = df.residual(mod4)
+pwr.f2.test(u = 1, v = v, f2 = fsq4, sig.level = 0.05)
 
 plot4 <- data %>% 
   filter(!is.na(Condition)) %>% 
