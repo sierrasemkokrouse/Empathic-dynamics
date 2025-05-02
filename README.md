@@ -1,6 +1,6 @@
 # Empathic-dynamics
  
- This folder contains the analyses for workplace intervention called "Empathic-dynamics." This intervention is currently under review at *The Journal of Applied Psychology.*
+ This folder contains the analyses for workplace intervention called "Empathic-dynamics." 
 
  [View](https://sierra-semkokrouse.quarto.pub/empathic-dynamics-full-analyses/) the full analyses.
 
